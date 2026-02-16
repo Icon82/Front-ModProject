@@ -1,18 +1,11 @@
-FROM node:22-alpine
-
+FROM node:22-alpine AS build
 WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
 
-# Copia package.json
-COPY package.json ./
-
-# Installa dipendenze
-RUN npm install --production
-
-# Copia il codice
-COPY proxy-server.js ./
-
-# Esponi porta
-EXPOSE 4000
-
-# Avvia app
-CMD ["node", "proxy-server.js"]
+FROM nginx:alpine
+COPY --from=build /app/build /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
