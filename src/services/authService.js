@@ -1,17 +1,15 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
-import { authService } from '../services/authService';
-
-const ProtectedRoute = ({ children, requiredRole }) => {
-  if (!authService.isAuthenticated()) {
-    return <Navigate to="/login" replace />;
-  }
-
-  if (requiredRole && !authService.hasRole(requiredRole)) {
-    return <Navigate to="/unauthorized" replace />;
-  }
-
-  return children;
+// src/services/authService.js
+export const login = async (username, password) => {
+  const response = await fetch('/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password })
+  });
+  
+  if (!response.ok) throw new Error('Login failed');
+  return response.json();
 };
 
-export default ProtectedRoute;
+export const logout = () => {
+  localStorage.removeItem('token');
+};
