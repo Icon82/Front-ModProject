@@ -1,11 +1,10 @@
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
-const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 4000;
-const BACKEND_URL = process.env.BACKEND_URL || 'https://modproject-production.up.railway.app';
+const PORT = 4000; // Fisso in locale
+const BACKEND_URL = 'https://modproject-production.up.railway.app';
 
 // Middleware
 app.use(cors());
@@ -17,7 +16,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// ⚠️ API Routes PRIMA di static files
+// ✅ API Routes
 app.post('/auth/login', async (req, res) => {
   try {
     console.log('📤 Proxy login:', req.body);
@@ -69,16 +68,9 @@ app.use('/api/*', async (req, res) => {
   }
 });
 
-// ⚠️ Serve React build (DOPO le API routes!)
-app.use(express.static(path.join(__dirname, '../build')));
-
-// ⚠️ Tutte le altre route tornano index.html (React Router)
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../build', 'index.html'));
-});
+// ❌ RIMUOVI express.static e app.get('*')!
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`🚀 Proxy server on port ${PORT}`);
   console.log(`🔗 Backend: ${BACKEND_URL}`);
-  console.log(`📦 Serving React from: ${path.join(__dirname, '../build')}`);
 });
