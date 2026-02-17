@@ -52,7 +52,8 @@ const Login = ({ onLoginSuccess }) => {
       // Usa /auth/login se hai il proxy, altrimenti URL completo
       const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000';
       const response = await fetch(`${API_URL}/auth/login`, requestOptions);
-      
+      //const response = await fetch('/auth/login', requestOptions);
+     
       console.log('📥 === RISPOSTA API ===');
       console.log('📊 Status:', response.status);
       console.log('📊 StatusText:', response.statusText);
